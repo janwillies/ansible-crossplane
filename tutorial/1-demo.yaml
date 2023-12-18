@@ -1,0 +1,21 @@
+---
+apiVersion: ansible.crossplane.io/v1alpha1
+kind: ProviderConfig
+metadata:
+  name: default
+spec:
+  credentials: []
+---
+apiVersion: ansible.crossplane.io/v1alpha1
+kind: AnsibleRun
+metadata:
+  name: example
+spec:
+  forProvider:
+    playbookInline: |
+      ---
+      - hosts: localhost
+        tasks:
+          - name: ansibleplaybook-simple
+            debug:
+              msg: Hello world!

@@ -1,0 +1,19 @@
+---
+apiVersion: ansible.crossplane.io/v1alpha1
+kind: ProviderConfig
+metadata:
+  name: ssh-key
+spec:
+  credentials:
+    - filename: ssh.key
+      source: Secret
+      secretRef:
+        namespace: crossplane-system
+        name: ssh-key
+        key: key
+    - filename: .git-credentials
+      source: Secret
+      secretRef:
+        namespace: crossplane-system
+        name: gitlab-token
+        key: url

@@ -1,0 +1,14 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: sshd-config
+  namespace: vm
+data:
+  sshd_config: |
+    PasswordAuthentication no
+    ChallengeResponseAuthentication no
+    UsePAM no
+    Subsystem	sftp	/usr/lib/openssh/sftp-server
+  authorized_keys: |
+    ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAID56ATzVxu0Mqd8dUZbWkSfaFRL/Q78rfW1EUmAsVpPG your_email@example.com

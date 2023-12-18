@@ -1,0 +1,9 @@
+---
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: ansible-editor
+rules:
+- apiGroups: ["crossplane.accenture.com"]
+  resources: ["ansibles"]
+  verbs: ["*"]

@@ -1,0 +1,37 @@
+---
+apiVersion: ansible.crossplane.io/v1alpha1
+kind: ProviderConfig
+metadata:
+  name: ssh-key
+spec:
+  credentials:
+    - filename: ssh.key
+      source: Secret
+      secretRef:
+        namespace: crossplane-system
+        name: ssh-key
+        key: key
+    - filename: .git-credentials
+      source: Secret
+      secretRef:
+        namespace: crossplane-system
+        name: gitlab-token
+        key: url
+---
+apiVersion: ansible.crossplane.io/v1alpha1
+kind: AnsibleRun
+metadata:
+  name: example-gitlab-private
+spec:
+  forProvider:
+    inventoryInline: |
+      vm-1.default
+    roles:
+      - name: ansible_provider.harden_role
+        src: git+https://gitlab.com/janwillies/ansible-automation-private.git
+    vars:
+      ansible_ssh_user: ansible
+      ansible_ssh_private_key_file: ./ssh.key
+      ansible_ssh_common_args: '-o StrictHostKeyChecking=no'
+  providerConfigRef:
+    name: ssh-key

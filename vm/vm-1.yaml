@@ -1,0 +1,60 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: vm-1
+  name: vm-1
+  namespace: vm
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: vm-1
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: vm-1
+    spec:
+      containers:
+      - image: docker.io/library/ubuntu-23-10:ssh-2
+        name: ubuntu-23-10
+        ports:
+        - containerPort: 22
+          protocol: TCP
+        resources: {}
+        volumeMounts:
+        - name: ssh-volume
+          subPath: sshd_config
+          mountPath: /etc/ssh/sshd_config
+        - name: ssh-volume
+          subPath: authorized_keys
+          mountPath: /home/ansible/.ssh/authorized_keys
+      volumes:
+      - name: ssh-volume
+        configMap:
+          name: sshd-config
+status: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: null
+  labels:
+    app: vm-1
+  name: vm-1
+  namespace: vm
+spec:
+  ports:
+  - name: ssh
+    port: 22
+    protocol: TCP
+    targetPort: 22
+  selector:
+    app: vm-1
+  type: ClusterIP
+status:
+  loadBalancer: {}

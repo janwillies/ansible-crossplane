@@ -1,0 +1,11 @@
+{
+    "apiVersion": "crossplane.accenture.com/v1alpha1",
+    "kind": "Ansible",
+    "metadata": {
+      "name": "example-run"
+    },
+    "spec": {
+      "inventory": "vm-1.vm",
+      "role": "harden"
+    }
+  }

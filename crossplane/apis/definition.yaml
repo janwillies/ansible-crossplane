@@ -1,0 +1,38 @@
+apiVersion: apiextensions.crossplane.io/v1
+kind: CompositeResourceDefinition
+metadata:
+  name: xansibles.crossplane.accenture.com
+spec:
+  group: crossplane.accenture.com
+  names:
+    kind: XAnsible
+    plural: xansibles
+  claimNames:
+    kind: Ansible
+    plural: ansibles
+  versions:
+  - name: v1alpha1
+    served: true
+    referenceable: true
+    schema:
+      openAPIV3Schema:
+        type: object
+        properties:
+          spec:
+            type: object
+            properties:
+              inventory:
+                type: string
+                description: IP address or DNS name of the target vm.
+              role: 
+                type: string
+                description: which ansible role to execute.
+                enum:
+                - harden
+                default: harden
+            required:
+              - inventory
+              - role
+          # status:
+          #   type: object
+          #   properties: {}

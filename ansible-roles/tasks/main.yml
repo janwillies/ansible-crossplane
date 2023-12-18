@@ -1,0 +1,6 @@
+---
+- name: Harden the system
+  ansible.builtin.file:
+    path: /home/ansible/hardened
+    state: touch
+    mode: '0644'

@@ -1,0 +1,20 @@
+apiVersion: meta.pkg.crossplane.io/v1
+kind: Configuration
+metadata:
+  name: configuration-ansible
+  annotations:
+    meta.crossplane.io/maintainer: ACME corp <jan@willies.info>
+    meta.crossplane.io/source: github.com/janwillies/ansible-crossplane
+    meta.crossplane.io/license: Apache-2.0
+    meta.crossplane.io/description: |
+      A configuration to get started with provider-ansible
+    meta.crossplane.io/readme: |
+      This configuration provides a client api for provider-ansible
+spec:
+  crossplane:
+    version: ">=v1.14.4-0"
+  dependsOn:
+    - provider: xpkg.upbound.io/crossplane-contrib/provider-ansible
+      version: ">=v0.5.0"
+    # - function: xpkg.upbound.io/crossplane-contrib/function-patch-and-transform
+    #   version: ">=v0.2.1"

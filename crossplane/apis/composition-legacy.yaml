@@ -1,0 +1,51 @@
+
+apiVersion: apiextensions.crossplane.io/v1
+kind: Composition
+metadata:
+  name: ansible-run-legacy
+spec:
+  compositeTypeRef:
+    apiVersion: crossplane.accenture.com/v1alpha1
+    kind: XAnsible
+  resources:
+    # commented b/c of https://github.com/crossplane-contrib/provider-ansible/issues/172
+    # - name: ansible
+    - base:
+        apiVersion: ansible.crossplane.io/v1alpha1
+        kind: AnsibleRun
+        spec:
+          forProvider:
+            inventoryInline: # patched
+            roles:
+              - name: ansible_provider.harden_role
+                src: # patched
+            vars:
+              ansible_ssh_user: ansible
+              ansible_ssh_private_key_file: ./ssh.key
+              ansible_ssh_common_args: '-o StrictHostKeyChecking=no'
+          providerConfigRef:
+            name: ssh-key
+      patches:
+      # name & namespace are necessary b/c of https://github.com/crossplane-contrib/provider-ansible/issues/172
+      - type: CombineFromComposite
+        combine:
+          variables:
+            - fromFieldPath: spec.claimRef.namespace
+            - fromFieldPath: spec.claimRef.name
+          strategy: string
+          string:
+            fmt: "%s-%s"
+        toFieldPath: metadata.name
+      - type: FromCompositeFieldPath
+        fromFieldPath: spec.claimRef.namespace
+        toFieldPath: metadata.namespace
+      - type: FromCompositeFieldPath
+        fromFieldPath: spec.inventory
+        toFieldPath: spec.forProvider.inventoryInline
+      - type: FromCompositeFieldPath
+        fromFieldPath: spec.role
+        toFieldPath: spec.forProvider.roles[0].src
+        transforms:
+        - type: map
+          map: 
+            harden: "git+https://gitlab.com/janwillies/ansible-automation-private.git"

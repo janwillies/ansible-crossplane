@@ -1,0 +1,37 @@
+---
+apiVersion: ansible.crossplane.io/v1alpha1
+kind: ProviderConfig
+metadata:
+  name: ssh-key
+spec:
+  credentials:
+    - filename: ssh.key
+      source: Secret
+      secretRef:
+        namespace: crossplane-system
+        name: ssh-key
+        key: key
+---
+apiVersion: ansible.crossplane.io/v1alpha1
+kind: AnsibleRun
+metadata:
+  name: example-ssh
+spec:
+  forProvider:
+    inventoryInline: |
+      vm-1.default
+    playbookInline: |
+      ---
+      - hosts: all
+        tasks:
+          - name: Harden the system
+            ansible.builtin.file:
+              path: /home/ansible/hardened
+              state: touch
+              mode: '0644'
+    vars:
+      ansible_ssh_user: ansible
+      ansible_ssh_private_key_file: ./ssh.key
+      ansible_ssh_common_args: '-o StrictHostKeyChecking=no'
+  providerConfigRef:
+    name: ssh-key
