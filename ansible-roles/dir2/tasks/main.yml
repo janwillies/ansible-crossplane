@@ -1,0 +1,6 @@
+---
+- name: Soften the system
+  ansible.builtin.file:
+    path: /home/ansible/soften
+    state: touch
+    mode: '0644'

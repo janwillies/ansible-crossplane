@@ -2,7 +2,7 @@
 apiVersion: apiextensions.crossplane.io/v1
 kind: Composition
 metadata:
-  name: ansible-run
+  name: ansible-run-pipeline
 spec:
   compositeTypeRef:
     apiVersion: crossplane.accenture.com/v1alpha1
@@ -42,4 +42,4 @@ spec:
             transforms:
             - type: map
               map: 
-                harden: "git+https://gitlab.com/janwillies/ansible-automation-private.git"
+                harden: "https://gitlab.com/janwillies/ansible-collection.git"

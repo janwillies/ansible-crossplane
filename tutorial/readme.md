@@ -5,7 +5,7 @@ implemented with crossplane provider-ansible
 ## setup
 
 ```bash
-kind create cluster
+kind create cluster --image kindest/node:v1.29.0
 
 helm install crossplane \
 --version 1.14.4 \
@@ -23,7 +23,7 @@ curl -sL "https://raw.githubusercontent.com/crossplane/crossplane/master/install
 ### install `provider-ansible`
 [https://marketplace.upbound.io/providers/crossplane-contrib/provider-ansible](https://marketplace.upbound.io/providers/crossplane-contrib/provider-ansible)
 ```bash
-crossplane xpkg install provider xpkg.upbound.io/crossplane-contrib/provider-ansible:v0.5.0
+crossplane xpkg install provider xpkg.upbound.io/jcw/provider-ansible:v0.5.0-jcw2-ansible-8.7.0
 ```
 
 
@@ -113,13 +113,25 @@ git config --global credential.helper 'store --file /tmp/ansibleDir/8ba94f8d-78a
 This seems to be missing: https://github.com/crossplane-contrib/provider-ansible/blob/5dba0f13852a098f31dfbfb86b1775e274a0cfd7/internal/controller/ansibleRun/ansibleRun.go#L232
 
 
+## ansible collection on gitlab
+It's possible to have multiple collections in a single git repo. They can be executed individually as well.
+```bash
+kubectl apply -f 5-gitlab-collection.yaml
+```
+
 ## client api via composition
+
+### install p&t function
+The function is only needed if you start with compositions.
+```bash
+crossplane xpkg install function xpkg.upbound.io/crossplane-contrib/function-patch-and-transform:v0.2.1 function-patch-and-transform
+```
+
 create the client api
 ```bash
 kubectl apply -f crossplane/apis/defintion.yaml
-kubectl apply -f crossplane/apis/composition-legacy.yaml
+kubectl apply -f crossplane/apis/composition.yaml
 ```
-note: we have to use legacy p&t compositions because of [#172](https://github.com/crossplane-contrib/provider-ansible/issues/172#issuecomment-1859291785)
 
 test
 ```bash
@@ -133,7 +145,7 @@ Now that we have everything in place, we can create some user accounts
 create `user-1` and corresponding oidc jwt
 ```bash
 kubectl apply -f user/
-TOKEN=$(kubectl create token user-1)
+TOKEN=$(kubectl -n user-1 create token user-1)
 ```
 
 finally apply the request as `user-1`:

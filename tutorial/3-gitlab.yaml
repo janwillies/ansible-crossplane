@@ -19,7 +19,7 @@ metadata:
 spec:
   forProvider:
     inventoryInline: |
-      vm-1.default
+      vm-1.vm
     roles:
       - name: ansible_provider.harden_role
         src: git+https://gitlab.com/janwillies/ansible-automation.git

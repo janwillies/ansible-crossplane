@@ -79,5 +79,4 @@ curl -s -X POST -H 'Content-Type: application/json' -d @examples/xrc.json http:/
 
 ## notes
 - [design.md](https://github.com/crossplane-contrib/provider-ansible/blob/main/docs/design.md)
-- `ProviderConfigUsage` was not cleaned up: https://github.com/crossplane-contrib/provider-ansible/issues/260
 - TODO: propagate `status` 

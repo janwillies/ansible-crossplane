@@ -32,7 +32,7 @@ spec:
                 default: harden
             required:
               - inventory
-              - role
+              # - role
           # status:
           #   type: object
           #   properties: {}

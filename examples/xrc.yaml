@@ -4,4 +4,3 @@ metadata:
   name: example-run
 spec:
   inventory: vm-1.vm
-  role: harden
